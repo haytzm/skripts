@@ -1,0 +1,2185 @@
+variables:
+	{combatlevel::%player%} = 0
+	{coins::%player%} = 0
+	{5m5xcoinbooster::%player%} = 0
+	{5m5xcoinbooster::%player%} = 0
+	{5m5xdamagebooster::%player%} = 0
+	{5m2xcoinbooster::%player%} = 0
+	{5m5xdamagebooster::%player%} = 0
+	{5mxpbooster::%player%} = 0
+	{5m5xxpbooster::%player%} = 0
+	{treasurelevel::%player%} = 0
+	{treasurexp::%player%} = 0
+	{chestchance::%player%} = 0
+	{treasurechance::%player%} = 0
+	{treasurechance} = 0
+	{hyperion::%player%} = 0
+	{activedamage::%player%} = 0
+command /clearlag:
+  permission: clearlag
+  permission message: &6[ERROR] &rYou do not have permission to execute this command!
+  trigger:
+    broadcast "&7[&6Spirant&7] &4%player% &cis Clearing all entities in 5 seconds!"
+    wait 5 seconds
+    execute console command "/execute run kill @e[type=!player]"
+#hologram funtion for the amount of coins yoy get on killing a monster
+function createHolo(l: Location, t: Text, length: Timespan):
+    create hologram "%{_t}%" at {_l} for {_length}
+#spawns a boss every 5 minutes this is the begginer boss so it isnt that strong or good to kill
+every 5 minutes in "spirant":
+	if {golem} = 0:
+		set {golem} to 1
+		spawn iron golem at location at (-149, 45, -261) 
+		set max health of last spawned iron golem to 100
+		set health of last spawned iron golem to 100
+		give last spawned iron golem netherite axe of sharpness 2
+		set name of last spawned iron golem to "&5&lEnchanted protecter"
+#if you are testing and want to spawn the boss this command will do so
+command /irong:
+	permission: op
+	trigger:
+		set {golem} to 1
+		spawn iron golem at location at (-149, 45, -261) 
+		set max health of last spawned iron golem to 100
+		set health of last spawned iron golem to 100
+		give last spawned iron golem netherite axe of sharpness 2
+		set name of last spawned iron golem to "&5&lEnchanted protecter"
+#death sequence of the boss
+on death of iron golem:
+	if name of victim is "&5&lEnchanted protecter":
+		set {golem} to 0
+		cancel drops
+		broadcast "&e------------------------------"
+		broadcast "&5&lEnchanted protecter &6Is down"
+		broadcast "&e--------------------------------"
+		if {5mxpbooster::%attacker%} = 1:
+			add 50 to {combatxp::%attacker%}
+		else:
+			add 25 to {combatxp::%attacker%}
+		chance of 80%:
+			add 1000 to attacker's balance
+			broadcast "&b%attacker% won 1000 coins"
+			give 5 of iron ingot to attacker 
+			execute console command "execute at %attacker% run playsound minecraft:entity.player.levelup player %attacker%"
+#testing dummy    
+on death of pig:
+	if name of victim is "testing dummy":
+		spawn 1 of pig at location of victim
+		add "{NoAI:1}" to nbt of last spawned pig
+		set name of last spawned pig to "testing dummy"
+		set last spawned pig's max health to 500000000
+		set last spawned pig's health to 50000000
+		apply resistance 10000 to last spawned pig for 100000000 days
+on death of pig:
+	if display name of victim is "testing dummy":
+		cancel drops
+		chance of 20%:
+			give raw porkchop to attacker
+on damage:
+		wait 1 ticks
+		set action bar of attacker to "&8[&c%victim's health% &8/ &c%victim's max health%&8]"
+		set {activedamage::%attacker%} to 1
+		wait 5 seconds
+		set {activedamage::%attacker%} to 0
+on any movement:
+	if {activedamage::%player%} = 0:
+		set action bar of player to "&a%player's health%/%player's max health%❤"
+on death of pig:
+    if display name of victim is "testing dummy":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e0 coins", 25 ticks)
+#the start of project 0 the zombie
+on death of zombie:
+	if name of victim is "project 0":
+		spawn 1 of zombie at location of victim
+		set last spawned Zombie's max health to 25
+		set last spawned Zombie's health to 25
+		add "{NoAI:1}" to nbt of last spawned zombie
+		set name of last spawned zombie to "project 0"
+#reset the combat level of the select player you want
+command /resetcombat <player>:
+	permission: op
+	trigger:
+		set {combatlevel::%arg-1%} to 0
+		set {combatxp::%arg%} to 0
+		send "&a&lYou have reset the comabat level of %arg-1%" to player
+		send "&a&lYour combat level has been reset by %player%" to arg-1
+command /addcoins:
+	permission: op
+	permission message: "&4you cant do that"
+	trigger:
+		add 10000 to player's balance
+		send "&b10000 coins have been added to your purse"
+on death of zombie:
+	if display name of victim is "project 0":
+		cancel drops
+		chance of 20%:
+			give rotten flesh to attacker
+on death of zombie:
+    if display name of victim is "project 0":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e10 coins", 25 ticks)
+on death of zombie:
+    if display name of victim is "project 0":
+        add 10 to attacker's balance
+        if {5mxpbooster::%attacker%} = 1:
+            add 1000000000 to {combatxp::%attacker%}
+        else:
+            add 10000000000 to {combatxp::%attacker%}
+on death of mooshroom:
+	if name of victim is "&5Enchanted Cow":
+		spawn 1 of mooshroom at location of victim
+		set last spawned mooshroom's max health to 200
+		set last spawned mooshroom's health to 200
+		add "{NoAI:1}" to nbt of last spawned mooshroom
+		set name of last spawned mooshroom to "&5Enchanted Cow"
+on death of mooshroom:
+	if display name of victim is "&5Enchanted Cow":
+		cancel drops
+		chance of 20%:
+			give leather to attacker
+on death of mooshroom:
+    if display name of victim is "&5Enchanted Cow":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e10 coins", 25 ticks)
+on death of mooshroom:
+	if display name of victim is "&5Enchanted Cow":
+		if {5m2xcoinbooster::%player%} = 0:
+			add 10 to attacker's balance
+		else:
+			stop
+on death of mooshroom:
+	if display name of victim is "&5Enchanted Cow":
+		if {5m2xcoinbooster::%player%} > 0:
+			add 20 to attacker's balance
+		else:
+			stop
+on death of mooshroom:
+	if display name of victim is "&5Enchanted Cow":
+		if {5m5xcoinbooster::%player%} > 0:
+			add 50 to attacker's balance
+		else:
+			stop
+on death of mooshroom:
+     if display name of victim is "&5Enchanted Cow":
+          if {5mxpbooster::%attacker%} = 0:
+               add 5 to {combatxp::%attacker%}
+          else:
+               if {5mxpbooster::%attacker%} > 0:
+                    add 10 to {combatxp::%attacker%}
+          if {5m5xxpbooster::%attacker%} > 0:
+               add 25 to {combatxp::%attacker%}
+          else:
+               if {5m5xxpbooster::%attacker%} = 0:
+                    add 10 to {combatxp::%attacker%}
+               else:
+                    if {5mxpbooster::%attacker%} = 0:
+                         add 5 to {combatxp::%player%}
+
+on death of evoker:
+	if name of victim is "&5Enchanted &7&lWizard":
+		spawn 1 of evoker at location of victim
+		set last spawned evoker's max health to 400
+		set last spawned evoker's health to 400
+		add "{NoAI:1}" to nbt of last spawned evoker
+		set name of last spawned evoker to "&5Enchanted &7&lWizard"
+		cancel drops
+
+on death of evoker:
+    if display name of victim is "&5Enchanted &7&lWizard":
+        loop blocks in radius 2 around head of victim:
+            if {5mcoinbooster::%attacker%} < 1:
+                add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e25 coins", 25 ticks)
+on death of evoker:
+	if display name of victim is "&5Enchanted &7&lWizard":
+		if {5m2xcoinbooster::%player%} = 0:
+			add 25 to attacker's balance
+		else:
+			stop
+on death of evoker:
+	if display name of victim is "&5Enchanted &7&lWizard":
+		if {5m2xcoinbooster::%player%} > 0:
+			add 50 to attacker's balance
+		else:
+			stop
+on death of evoker:
+	if display name of victim is "&5Enchanted &7&lWizard":
+		if {5m5xcoinbooster::%player%} > 0:
+			add 125 to attacker's balance
+		else:
+			stop	
+on death of evoker:
+     if display name of victim is "&5Enchanted &7&lWizard":
+          if {5mxpbooster::%attacker%} = 0:
+               add 7 to {combatxp::%attacker%}
+          else:
+               if {5mxpbooster::%attacker%} = 0:
+                    add 14 to {combatxp::%attacker%}
+          if {5m5xxpbooster::%attacker%} > 0:
+               add 35 to {combatxp::%attacker%}
+          else:
+               if {5m5xxpbooster::%attacker%} = 0:
+                    add 7 to {combatxp::%attacker%}
+               else:
+                    if {5mxpbooster::%attacker%} = 0:
+                         add 14 to {combatxp::%player%}
+on death of evoker:
+    if display name of victim is "&5Enchanted &7&lWizard":
+        if {5mcoinbooster::%player%} > 0:
+            add 175 to player's balance
+        else:
+            stop			
+on damage of evoker:
+	if display name of victim is "&5Enchanted &7&lWizard":
+		push attacker backwards at speed 0.5
+		damage attacker by 0.5 
+on death:
+    if {combatlevel::%attacker%} = 0:
+        send title "&b(%{combatxp::%attacker%}%/25)" with subtitle "&3Combat Xp" to attacker for 0.5 seconds
+        stop
+    if {combatlevel::%attacker%} < 40:
+        send title "&b(%{combatxp::%attacker%}%/%{combatxplevel::%attacker%}%)" with subtitle "&3Combat Xp" to attacker for 0.5 seconds
+every 1 tick:	
+    loop all players:
+        if {combatxp::%loop-player%} > 24:
+            if {combatlevel::%loop-player%} = 0:
+                send title "&c&lCombat level up ↑ 1" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 1" to loop-player
+                send "&6you now deal 3 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 1
+                set {combatxplevel::%loop-player%} to 50
+        if {combatxp::%loop-player%} > 49:
+            if {combatlevel::%loop-player%} = 1:
+                send title "&c&lCombat level up ↑ 2" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 2" to loop-player
+                send "&6you now deal 6 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 2
+                set {combatxplevel::%loop-player%} to 75
+        if {combatxp::%loop-player%} > 74:
+            if {combatlevel::%loop-player%} = 2:
+                send title "&c&lCombat level up ↑ 3" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 3" to loop-player
+                send "&6you now deal 9 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 3
+                set {combatxplevel::%loop-player%} to 100
+        if {combatxp::%loop-player%} > 99:
+            if {combatlevel::%loop-player%} = 3:
+                send title "&c&lCombat level up ↑ 4" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 4" to loop-player
+                send "&6you now deal 12 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 4
+                set {combatxplevel::%loop-player%} to 150
+        if {combatxp::%loop-player%} > 149:
+            if {combatlevel::%loop-player%} = 4:
+                send title "&c&lCombat level up ↑ 5" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 5" to loop-player
+                send "&6you now deal 15 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 5
+                set {combatxplevel::%loop-player%} to 200
+        if {combatxp::%loop-player%} > 199:
+            if {combatlevel::%loop-player%} = 5:
+                send title "&c&lCombat level up ↑ 6" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 6" to loop-player
+                send "&6you now deal 18 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 6
+                set {combatxplevel::%loop-player%} to 500
+        if {combatxp::%loop-player%} > 499:
+            if {combatlevel::%loop-player%} = 6:
+                send title "&c&lCombat level up ↑ 7" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 7" to loop-player
+                send "&6you now deal 21 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 7
+                set {combatxplevel::%loop-player%} to 1000
+        if {combatxp::%loop-player%} > 999:
+            if {combatlevel::%loop-player%} = 7:
+                send title "&c&lCombat level up ↑ 8" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 8" to loop-player
+                send "&6you now deal 24 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 8
+                set {combatxplevel::%loop-player%} to 1500
+        if {combatxp::%loop-player%} > 1499:
+            if {combatlevel::%loop-player%} = 8:
+                send title "&c&lCombat level up ↑ 9" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 9" to loop-player
+                send "&6you now deal 27 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 9
+                set {combatxplevel::%loop-player%} to 2250
+        if {combatxp::%loop-player%} > 2249:
+            if {combatlevel::%loop-player%} = 9:
+                send title "&c&lCombat level up ↑ 10" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 10" to loop-player
+                send "&6you now deal 30 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 10
+                set {combatxplevel::%loop-player%} to 2500
+        if {combatxp::%loop-player%} > 2499:
+            if {combatlevel::%loop-player%} = 10:
+                send title "&c&lCombat level up ↑ 11" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 11" to loop-player
+                send "&6you now deal 33 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 11
+                set {combatxplevel::%loop-player%} to 3200
+        if {combatxp::%loop-player%} > 3199:
+            if {combatlevel::%loop-player%} = 11:
+                send title "&c&lCombat level up ↑ 12" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 12" to loop-player
+                send "&6you now deal 36 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 12
+                set {combatxplevel::%loop-player%} to 4000
+        if {combatxp::%loop-player%} > 3999:
+            if {combatlevel::%loop-player%} = 12:
+                send title "&c&lCombat level up ↑ 13" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 13" to loop-player
+                send "&6you now deal 39 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 13
+                set {combatxplevel::%loop-player%} to 5000
+        if {combatxp::%loop-player%} > 4999:
+            if {combatlevel::%loop-player%} = 13:
+                send title "&c&lCombat level up ↑ 14" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 14" to loop-player
+                send "&6you now deal 42 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 14
+                set {combatxplevel::%loop-player%} to 7500
+        if {combatxp::%loop-player%} > 7499:
+            if {combatlevel::%loop-player%} = 14:
+                send title "&c&lCombat level up ↑ 15" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 15" to loop-player
+                send "&6you now deal 45 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 15
+                set {combatxplevel::%loop-player%} to 9000
+        if {combatxp::%loop-player%} > 8999:
+            if {combatlevel::%loop-player%} = 15:
+                send title "&c&lCombat level up ↑ 16" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 16" to loop-player
+                send "&6you now deal 51 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 16
+                set {combatxplevel::%loop-player%} to 10000
+        if {combatxp::%loop-player%} > 9999:
+            if {combatlevel::%loop-player%} = 16:
+                send title "&c&lCombat level up ↑ 17" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 17" to loop-player
+                send "&6you now deal 54 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 17
+                set {combatxplevel::%loop-player%} to 12500
+        if {combatxp::%loop-player%} > 12499:
+            if {combatlevel::%loop-player%} = 17:
+                send title "&c&lCombat level up ↑ 18" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 18" to loop-player
+                send "&6you now deal 57 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 18
+                set {combatxplevel::%loop-player%} to 15000
+        if {combatxp::%loop-player%} > 14999:
+            if {combatlevel::%loop-player%} = 18:
+                send title "&c&lCombat level up ↑ 19" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 19" to loop-player
+                send "&6you now deal 60 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 19
+                set {combatxplevel::%loop-player%} to 16500
+        if {combatxp::%loop-player%} > 164999:
+            if {combatlevel::%loop-player%} = 19:
+                send title "&c&lCombat level up ↑ 20" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 20" to loop-player
+                send "&6you now deal 63 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 20
+                set {combatxplevel::%loop-player%} to 17250
+        if {combatxp::%loop-player%} > 17249:
+            if {combatlevel::%loop-player%} = 20:
+                send title "&c&lCombat level up ↑ 21" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 21" to loop-player
+                send "&6you now deal 66 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 21
+                set {combatxplevel::%loop-player%} to 18000
+        if {combatxp::%loop-player%} > 17999:
+            if {combatlevel::%loop-player%} = 21:
+                send title "&c&lCombat level up ↑ 22" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 22" to loop-player
+                send "&6you now deal 69 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 22
+                set {combatxplevel::%loop-player%} to 19250
+        if {combatxp::%loop-player%} > 19149:
+            if {combatlevel::%loop-player%} = 22:
+                send title "&c&lCombat level up ↑ 23" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 23" to loop-player
+                send "&6you now deal 72 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 23
+                set {combatxplevel::%loop-player%} to 20000
+        if {combatxp::%loop-player%} > 19999:
+            if {combatlevel::%loop-player%} = 23:
+                send title "&c&lCombat level up ↑ 24" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 24" to loop-player
+                send "&6you now deal 75 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 24
+                set {combatxplevel::%loop-player%} to 21000
+        if {combatxp::%loop-player%} > 20999:
+            if {combatlevel::%loop-player%} = 24:
+                send title "&c&lCombat level up ↑ 25" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 25" to loop-player
+                send "&6you now deal 78 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 25
+                set {combatxplevel::%loop-player%} to 22000
+        if {combatxp::%loop-player%} > 21999:
+            if {combatlevel::%loop-player%} = 25:
+                send title "&c&lCombat level up ↑ 26" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 26" to loop-player
+                send "&6you now deal 81 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 26
+                set {combatxplevel::%loop-player%} to 22750
+        if {combatxp::%loop-player%} > 22749:
+            if {combatlevel::%loop-player%} = 26:
+                send title "&c&lCombat level up ↑ 27" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 27" to loop-player
+                send "&6you now deal 84 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 27
+                set {combatxplevel::%loop-player%} to 24000
+        if {combatxp::%loop-player%} > 23999:
+            if {combatlevel::%loop-player%} = 27:
+                send title "&c&lCombat level up ↑ 28" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 28" to loop-player
+                send "&6you now deal 87 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 28
+                set {combatxplevel::%loop-player%} to 25000
+        if {combatxp::%loop-player%} > 24999:
+            if {combatlevel::%loop-player%} = 28:
+                send title "&c&lCombat level up ↑ 29" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 29" to loop-player
+                send "&6you now deal 89 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 29
+                set {combatxplevel::%loop-player%} to 26500
+        if {combatxp::%loop-player%} > 26499:
+            if {combatlevel::%loop-player%} = 29:
+                send title "&c&lCombat level up ↑ 30" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 30" to loop-player
+                send "&6you now deal 91 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 30
+                set {combatxplevel::%loop-player%} to 28000
+        if {combatxp::%loop-player%} > 24999:
+            if {combatlevel::%loop-player%} = 30:
+                send title "&c&lCombat level up ↑ 31" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 31" to loop-player
+                send "&6you now deal 92 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 31
+                set {combatxplevel::%loop-player%} to 30000
+        if {combatxp::%loop-player%} > 29999:
+            if {combatlevel::%loop-player%} = 31:
+                send title "&c&lCombat level up ↑ 32" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 32" to loop-player
+                send "&6you now deal 93 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 32
+                set {combatxplevel::%loop-player%} to 31250
+        if {combatxp::%loop-player%} > 31249:
+            if {combatlevel::%loop-player%} = 32:
+                send title "&c&lCombat level up ↑ 33" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 33" to loop-player
+                send "&6you now deal 94 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 33
+                set {combatxplevel::%loop-player%} to 33000
+        if {combatxp::%loop-player%} > 32999:
+            if {combatlevel::%loop-player%} = 33:
+                send title "&c&lCombat level up ↑ 34" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 35" to loop-player
+                send "&6you now deal 95 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 34
+                set {combatxplevel::%loop-player%} to 33500
+        if {combatxp::%loop-player%} > 33499:
+            if {combatlevel::%loop-player%} = 33:
+                send title "&c&lCombat level up ↑ 34" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 34" to loop-player
+                send "&6you now deal 96 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 34
+                set {combatxplevel::%loop-player%} to 34000
+        if {combatxp::%loop-player%} > 33999:
+            if {combatlevel::%loop-player%} = 34:
+                send title "&c&lCombat level up ↑ 35" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 35" to loop-player
+                send "&6you now deal 97 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 35
+                set {combatxplevel::%loop-player%} to 35000
+        if {combatxp::%loop-player%} > 39999:
+            if {combatlevel::%loop-player%} = 35:
+                send title "&c&lCombat level up ↑ 36" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 36" to loop-player
+                send "&6you now deal 98 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 36
+                set {combatxplevel::%loop-player%} to 40000
+        if {combatxp::%loop-player%} > 39999:
+            if {combatlevel::%loop-player%} = 36:
+                send title "&c&lCombat level up ↑ 37" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 37" to loop-player
+                send "&6you now deal 99 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 37
+                set {combatxplevel::%loop-player%} to 45000
+        if {combatxp::%loop-player%} > 44999:
+            if {combatlevel::%loop-player%} = 37:
+                send title "&c&lCombat level up ↑ 38" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 38" to loop-player
+                send "&6you now deal 100 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 38
+                set {combatxplevel::%loop-player%} to 47500
+        if {combatxp::%loop-player%} > 47499:
+            if {combatlevel::%loop-player%} = 38:
+                send title "&c&lCombat level up ↑ 39" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 39" to loop-player
+                send "&6you now deal 105 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 39
+                set {combatxplevel::%loop-player%} to 50000
+        if {combatxp::%loop-player%} > 49999:
+            if {combatlevel::%loop-player%} = 39:
+                send title "&c&lCombat level up ↑ 40" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your combat xp to level 40" to loop-player
+                send "&6you now deal 120 percent more damage to all mobs" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {combatxp::%loop-player%} to 0
+                set {combatlevel::%loop-player%} to 40
+                set {combatxplevel::%loop-player%} to 52500
+on death of pillager:
+	if name of victim is "&2Goblin Raider":
+		spawn 1 of pillager at location of victim
+		set last spawned pillager's max health to 50
+		set last spawned pillager's health to 50
+		add "{NoAI:1}" to nbt of last spawned pillager
+		set name of last spawned pillager to "&2Goblin Raider"
+		
+
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e15 coins", 25 ticks)
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e7 coins", 25 ticks)
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5mxpbooster::%attacker%} = 0:
+            if {5m5xxpbooster::%player%} = 0:
+                add 2 to {combatxp::%attacker%}
+            else:
+                stop
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5mxpbooster::%attacker%} > 0:
+            add 4 to {combatxp::%attacker%}
+        else:
+            stop
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5m5xxpbooster::%attacker%} > 10:
+            add 125 to {combatxp::%attacker%}
+			
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5mcoinbooster::%attacker%} > 1:
+            add 30 to player's balance
+        else:
+            add 15 to player's balance
+        if {5m5xcoinbooster::%player%} > 1:
+            add 75 to player's balance
+        else:
+            add 15 to player's balance
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5mcoinbooster::%player%} = 0:
+            add 15 to player's balance
+        else:
+            stop
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5mcoinbooster::%player%} > 0:
+            add 30 to player's balance
+        else:
+            stop
+on death of pillager:
+    if display name of victim is "&2Goblin Raider":
+        if {5m5xcoinbooster::%player%} > 0:
+            add 75 to player's balance
+        else:
+            stop
+on death:
+    if {combatlevel::%attacker%} = 0:
+        send title "&b(%{combatxp::%attacker%}%/25)" with subtitle "&3Combat Xp" to attacker for 0.5 seconds
+        stop
+    if {combatlevel::%attacker%} < 40:
+        send title "&b(%{combatxp::%attacker%}%/%{combatxplevel::%attacker%}%)" with subtitle "&3Combat Xp" to attacker for 0.5 seconds
+on click on lectern:
+	if "%region at player%" contains "goblin":
+		if player's balance > 9999:
+			send "&bYou have unlocked the enchanted warp" to player
+			subtract 10000 from player's balance
+			set {enchantedaccess::%player%} to 1
+on entering of region "enchantedwarp":
+	if {enchantedaccess::%player%} = 1:
+		execute player command "warper"
+		
+command /goblin:
+	trigger:
+		open virtual chest with 4 rows named "&2Goblin Shop" to player
+		set slot 0 of current inventory of player to white stained glass pane named " " 
+		set slot 1 of current inventory of player to white stained glass pane named " "
+		set slot 2 of current inventory of player to white stained glass pane named " "
+		set slot 3 of current inventory of player to white stained glass pane named " "
+		set slot 4 of current inventory of player to emerald named "&aEmerald Blade" with lore "&e10,000 Coins"
+		set slot 5 of current inventory of player to white stained glass pane named " "
+		set slot 6 of current inventory of player to white stained glass pane named " "
+		set slot 7 of current inventory of player to white stained glass pane named " "
+		set slot 8 of current inventory of player to white stained glass pane named " "
+		set slot 9 of current inventory of player to white stained glass pane named " "
+		set slot 10 of current inventory of player to white stained glass pane named " "
+		set slot 11 of current inventory of player to warped fungus on a stick named "&2Goblin stick" with lore "&e500 coins"
+		set slot 12 of current inventory of player to white stained glass pane named " "
+		set slot 13 of current inventory of player to white stained glass pane named " "
+		set slot 13 of current inventory of player to white stained glass pane named " "
+		set slot 14 of current inventory of player to white stained glass pane named " "
+		set slot 15 of current inventory of player to bread named "food" with lore "&e5 coins"
+		set slot 16 of current inventory of player to white stained glass pane named " "
+		set slot 17 of current inventory of player to white stained glass pane named " "
+		set slot 18 of current inventory of player to white stained glass pane named " "
+		set slot 19 of current inventory of player to white stained glass pane named " "
+		set slot 20 of current inventory of player to white stained glass pane named " "
+		set slot 21 of current inventory of player to white stained glass pane named " "
+		set slot 22 of current inventory of player to white stained glass pane named " "
+		set slot 23 of current inventory of player to white stained glass pane named " "
+		set slot 24 of current inventory of player to white stained glass pane named " "
+		set slot 24 of current inventory of player to white stained glass pane named " "
+		set slot 25 of current inventory of player to white stained glass pane named " "
+		set slot 26 of current inventory of player to white stained glass pane named " "
+		set slot 27 of current inventory of player to white stained glass pane named " "
+		set slot 28 of current inventory of player to white stained glass pane named " "
+		set slot 29 of current inventory of player to white stained glass pane named " "
+		set slot 30 of current inventory of player to white stained glass pane named " "
+		set slot 31 of current inventory of player to white stained glass pane named " "
+		set slot 32 of current inventory of player to white stained glass pane named " "
+		set slot 33 of current inventory of player to white stained glass pane named " "
+		set slot 34 of current inventory of player to white stained glass pane named " "
+		set slot 35 of current inventory of player to white stained glass pane named " "
+on inventory click:
+    inventory name of player's current inventory is "&2goblin shop":
+        name of item is " "
+        cancel event	
+		
+on inventory click:
+    inventory name of player's current inventory is "&2goblin shop":
+        name of item is "&aEmerald Blade"
+        cancel event
+        if player's balance > 10000:
+            subtract 10000 from player's balance
+            give emerald named "&aEmerald Blade" with lore "&7Damage &e25" to player
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            send "&4you do not have sufficent funds" to player
+            execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+on inventory click:
+    inventory name of player's current inventory is "&2goblin shop":
+        name of item is "food"
+        cancel event
+        if player's balance > 5:
+            subtract 5 from player's balance
+            give bread named "food" to player
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            send "&4you do not have sufficent funds" to player
+            execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+on damage:
+	attacker is player:
+		name of attacker's tool is "&aEmerald Blade"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 50
+		else:
+			set damage to 25
+on damage:
+	attacker is player:
+		name of attacker's tool is "&2Goblin stick"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 20
+		else:
+			set damage to 10
+on damage:
+	attacker is player:
+		name of attacker's tool is "&2Goblin sword"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 15
+		else:
+			set damage to 7.5
+on damage:
+	attacker is player:
+		name of attacker's tool is "&aGoblin skull"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 10
+		else:
+			set damage to 5
+on damage:
+	attacker is player:
+		name of attacker's tool is "&eGoblin Axe"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 5
+		else:
+			set damage to 2.5
+on damage:
+	attacker is player:
+		name of attacker's tool is "&5Enchanted Tear"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 70
+		else:
+			set damage to 30
+on damage:
+	attacker is player:
+		name of attacker's tool is "&5Enchanted Charm"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 100
+		else:
+			set damage to 50
+on damage:
+	attacker is player:
+		name of attacker's tool is "&6Enchanted Candle"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 100
+		else:
+			set damage to 50
+on damage:
+	attacker is player:
+		name of attacker's tool is "&5Enchanted horn"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 30
+		else:
+			set damage to 15
+on damage:
+	attacker is player:
+		name of attacker's tool is "&5Enchanted Rope"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 50
+		else:
+			set damage to 25
+on damage:
+	attacker is player:
+		name of attacker's tool is "&6Legendary Shovel"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 1000
+		else:
+			set damage to 500
+on damage:
+	attacker is player:
+		name of attacker's tool is "&5Epic Shovel"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 600
+		else:
+			set damage to 300
+on damage:
+	attacker is player:
+		name of attacker's tool is "&fNormal Shovel"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 400
+		else:
+			set damage to 200
+on damage:
+	attacker is player:
+		name of attacker's tool is "&7Starter Shovel"
+		if {5mdamagebooster::%attacker%} > 1:
+			set damage to 200
+		else:
+			set damage to 100
+on damage:
+	attacker is player:
+		name of attacker's tool is "&f&lUnstable &7Explosive Sword"
+		set damage to 250
+on damage:
+	attacker is player:
+		name of attacker's tool is "&6&lGilded &7Explosive Sword"
+		set damage to 500
+on inventory click:
+    inventory name of player's current inventory is "&2goblin shop":
+        name of item is "&2Goblin stick"
+        cancel event
+        if player's balance > 249:
+            subtract 250 from player's balance
+            give warped fungus on a stick named "&2Goblin stick" with lore "&7Damage &e10" to player
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            send "&4you do not have sufficent funds" to player
+            execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+
+command /test2:
+    trigger:
+        set action bar of player to "&c Hello"
+command /level:
+	trigger:
+		send "&byour level is &f&l%{combatlevel::%player%}%" to player
+command /treasurelevel:
+	trigger:
+		send "&bYour level is &f&l%{treasurelevel::%player%}%"
+on click on magma block:
+	if player's balance > 149:
+		execute console command "goldencrates givekey %player% goblin"
+		subtract 150 from player's balance
+		send "&bCongrats you bought the goblin key" to player
+	else:
+		send "&4you do not have sufficent funds" to player
+command /warper:
+	trigger:
+		open virtual chest with 1 rows named "&5warps" to player
+		set slot 0 of current inventory of player to small dripleaf named "&aGoblin Warp" 
+		set slot 1 of current inventory of player to white stained glass pane named " "
+		set slot 2 of current inventory of player to white stained glass pane named " "
+		set slot 3 of current inventory of player to white stained glass pane named " "
+		set slot 4 of current inventory of player to white stained glass pane named " " 
+		set slot 5 of current inventory of player to white stained glass pane named " "
+		set slot 6 of current inventory of player to white stained glass pane named " "
+		set slot 7 of current inventory of player to white stained glass pane named " "
+		set slot 8 of current inventory of player to white stained glass pane named " "	
+		if {enchantedaccess::%player%} > 0:
+			set slot 1 of current inventory of player to dark oak log named "&5Enchanted Warp"
+		if {sandstoneaccess::%player%} > 0:
+			set slot 2 of current inventory of player to red sandstone named "&eDesert Warp"
+on entering of region "warps":
+	execute player command "warper"
+on inventory click:
+    inventory name of player's current inventory is "&5warps":
+        name of item is " "
+        cancel event
+on inventory click:
+    inventory name of player's current inventory is "&5warps":
+        name of item is "&aGoblin Warp"
+        cancel event
+        execute console command "tp %player% -170 54 -264"
+on inventory click:
+    inventory name of player's current inventory is "&5warps":
+        name of item is "&5Enchanted Warp"
+        cancel event
+        execute console command "tp %player% -126 47 -235"		
+on inventory click:
+    inventory name of player's current inventory is "&5warps":
+        name of item is "&eDesert Warp"
+        cancel event
+        execute console command "tp %player% -147 42 -201"		
+
+on damage:
+	bind hologram "&c- %damage%" to victim for 1 second offset by 0.4, 0.7, 0.7
+on heal:
+	bind hologram "&a+ %player's health%" to player for 1 second offset by 0.4, 0.7, 0.7
+on damage:
+	victim is not a player:
+		if {combatlevel::%attacker%} = 1:
+			increase damage by 25%
+		if {combatlevel::%attacker%} = 2:
+			increase damage by 50%
+		if {combatlevel::%attacker%} = 3:
+			increase damage by 100%
+		if {combatlevel::%attacker%} = 4:
+			increase damage by 500%
+		if {combatlevel::%attacker%} = 5:
+			increase damage by 750%
+		if {combatlevel::%attacker%} = 6:
+			increase damage by 1000%
+		if {combatlevel::%attacker%} = 7:
+			increase damage by 1250%
+		if {combatlevel::%attacker%} = 8:
+			increase damage by 1600%
+		if {combatlevel::%attacker%} = 9:
+			increase damage by 1800%
+		if {combatlevel::%attacker%} = 10:
+			increase damage by 2000%
+		if {combatlevel::%attacker%} = 11:
+			increase damage by 2200%
+		if {combatlevel::%attacker%} = 12:
+			increase damage by 2400%
+		if {combatlevel::%attacker%} = 13:
+			increase damage by 2600%
+		if {combatlevel::%attacker%} = 14:
+			increase damage by 2800%
+		if {combatlevel::%attacker%} = 15:
+			increase damage by 3000%
+		if {combatlevel::%attacker%} = 16:
+			increase damage by 3100%
+		if {combatlevel::%attacker%} = 17:
+			increase damage by 3125%
+		if {combatlevel::%attacker%} = 18:
+			increase damage by 3150%
+		if {combatlevel::%attacker%} = 19:
+			increase damage by 3175%
+		if {combatlevel::%attacker%} = 20:
+			increase damage by 3200%
+		if {combatlevel::%attacker%} = 21:
+			increase damage by 3250%
+		if {combatlevel::%attacker%} = 22:
+			increase damage by 3275%
+		if {combatlevel::%attacker%} = 23:
+			increase damage by 3300%
+		if {combatlevel::%attacker%} = 24:
+			increase damage by 3325%
+		if {combatlevel::%attacker%} = 25:
+			increase damage by 3350%
+		if {combatlevel::%attacker%} = 26:
+			increase damage by 3375%
+		if {combatlevel::%attacker%} = 27:
+			increase damage by 3400%
+		if {combatlevel::%attacker%} = 28:
+			increase damage by 3425%
+		if {combatlevel::%attacker%} = 29:
+			increase damage by 3450%
+		if {combatlevel::%attacker%} = 30:
+			increase damage by 3475%
+		if {combatlevel::%attacker%} = 31:
+			increase damage by 3500%
+		if {combatlevel::%attacker%} = 32:
+			increase damage by 3525%
+		if {combatlevel::%attacker%} = 33:
+			increase damage by 3550%
+		if {combatlevel::%attacker%} = 34:
+			increase damage by 3575%
+		if {combatlevel::%attacker%} = 35:
+			increase damage by 3600%
+		if {combatlevel::%attacker%} = 35:
+			increase damage by 3625%
+		if {combatlevel::%attacker%} = 36:
+			increase damage by 3650%
+		if {combatlevel::%attacker%} = 37:
+			increase damage by 3675%
+		if {combatlevel::%attacker%} = 38:
+			increase damage by 3700%
+		if {combatlevel::%attacker%} = 39:
+			increase damage by 3725%
+		if {combatlevel::%attacker%} = 40:
+			increase damage by 3750%
+on item damage:
+	cancel event
+command /enchanted:
+	trigger:
+		open virtual chest with 2 rows named "&5Enchanted Shop" to player
+		set slot 0 of current inventory of player to white stained glass pane named " " 
+		set slot 1 of current inventory of player to white stained glass pane named " "
+		set slot 2 of current inventory of player to white stained glass pane named " "
+		set slot 3 of current inventory of player to white stained glass pane named " "
+		set slot 4 of current inventory of player to magenta candle named "&6Enchanted Candle" with lore "&eCost 20,000" and " " and "&6&lLEGENDARY" 
+		set slot 5 of current inventory of player to white stained glass pane named " "
+		set slot 6 of current inventory of player to white stained glass pane named " "
+		set slot 7 of current inventory of player to white stained glass pane named " "
+		set slot 8 of current inventory of player to white stained glass pane named " "
+		set slot 9 of current inventory of player to white stained glass pane named " "	
+		set slot 10 of current inventory of player to lilac named "&5Enchanted Charm" with lore "&eCost 17,500 coins" and " " and "&a&lUNCOMMON" 
+		set slot 11 of current inventory of player to white stained glass pane named " "	
+		set slot 12 of current inventory of player to white stained glass pane named " "	
+		set slot 13 of current inventory of player to white stained glass pane named " "	
+		set slot 14 of current inventory of player to white stained glass pane named " "
+		set slot 15 of current inventory of player to white stained glass pane named " "	
+		set slot 16 of current inventory of player to ghast tear named "&5Enchanted Tear" with lore "&e16,000 coins" and " " and "&a&lUNCOMMON" 
+		set slot 17 of current inventory of player to white stained glass pane named " "	
+on inventory click:
+    inventory name of player's current inventory is "&5Enchanted Shop":
+        name of item is " "
+        cancel event
+        execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+on inventory click:
+    inventory name of player's current inventory is "&5Enchanted Shop":
+        name of item is "&6Enchanted Candle"
+        cancel event
+        if player's balance > 19999:
+            subtract 20000 from player's balance
+            give player magenta candle named "&6Enchanted Candle" with lore "&7Damage &e100" and " " and "&6&lLEGENDARY"
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            send "&4You are an unfit mother" to player
+            execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+
+on inventory click:
+    inventory name of player's current inventory is "&5Enchanted Shop":
+        name of item is "&5Enchanted Charm"
+        cancel event
+        if player's balance > 17499:
+            subtract 17500 from player's balance
+            give player lilac named "&5Enchanted Charm" with lore "&7Damage &e50" and " " and "&a&lUNCOMMON"
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            send "&4your mother is unfit get more money" to player
+            execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+on inventory click:
+    inventory name of player's current inventory is "&5Enchanted Shop":
+        name of item is "&5Enchanted Tear"
+        cancel event
+        if player's balance > 15990:
+            subtract 16000 from player's balance
+            give player ghast tear named "&5Enchanted Tear" with lore "&7Damage &e35" and " " and "&a&lUNCOMMON" 
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            send "&4You do not have sufficent funds to make this purchase" to player
+            execute console command "execute at %player% run playsound minecraft:entity.villager.no player %player%"
+			
+on click on lodestone:
+	if player's balance > 2499:
+		send "&bSpirant: &9Loading your crate" to player
+		set {activecrate::%player%} to 1
+		execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+		wait 1 second
+		execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+		wait 1 second
+		execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+		set {activecrate::%player%} to 0
+		subtract 2500 from player's balance
+		chance of 100%:
+			give player pointed dripstone named "&5Enchanted horn" with lore "&7Damage &e15" and " " and "&a&lUNCOMMON" 
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {dripstone::%player%} to 1
+			chance of 25%:
+				give player lead named "&5Enchanted Rope" with lore "&7Damage &e25" and " " and "&a&lUNCOMMON" 
+				execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			chance of 15%:
+				if {dripstone::%player%} = 0:
+					give player ghast tear named "&5Enchanted Tear" with lore "&7Damage &e35" and " " and "&a&lUNCOMMON" 
+					execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			chance of 10%:
+				give player lilac named "&5Enchanted Charm" with lore "&7Damage &e50" and " " and "&a&lUNCOMMON" 
+				execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			chance of 5%:
+				give player magenta candle named "&6Enchanted candle" with lore "&7Damage &e100" and " " and "&6&lLEGENDARY"
+				execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			
+on click on lectern:	
+	if "%region at player%" contains "goblin":
+		if {enchantedaccess::%player%} = 0:
+			if player's balance > 9999:
+				subtract 10000 from player's balance
+				set {enchantedaccess::%player%} to 1
+				send "&9You have unlocked the Enchanted Region" to player
+			else:
+				send "&4you dont have money" to player
+command /remcrate <player>:
+	trigger:
+		set {activecrate::%player%} to 0
+		send "your crate status has been cleared" to arg-1
+		
+on death:
+	if name of victim is "&5Enchanted Guard":
+		wait 10 seconds
+		spawn 1 of iron golem at location of victim
+		set last spawned iron golem's max health to 250
+		set last spawned iron golem's health to 250
+		add "{NoAI:1}" to nbt of last spawned iron golem
+		set name of last spawned iron golem to "&5Enchanted Guard"
+on death:
+	if display name of victim is "&5Enchanted Guard":
+		cancel drops
+		chance of 40%:
+			give iron ingot to attacker
+on death:
+    if display name of victim is "&5Enchanted Guard":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e35 coins", 25 ticks)
+on death:
+    if display name of victim is "&5Enchanted Guard":
+        if {5mcoinbooster::%attacker%} = 0:
+            add 25 to player's balance
+        else:
+            stop
+on death:
+    if display name of victim is "&5Enchanted Guard":
+        if {5mcoinbooster::%attacker%} > 0:
+            add 50 to player's balance
+        else:
+            stop
+on death:
+    if display name of victim is "&5Enchanted Guard":
+        if {5m5xcoinbooster::%player%} > 0:
+            add 125 to player's balance
+        else:
+            stop
+on death:
+     if display name of victim is "&5Enchanted Guard":
+          if {5mxpbooster::%attacker%} > 1:
+               add 20 to {combatxp::%attacker%}
+          else:
+               add 10 to {combatxp::%attacker%}
+          if {5m5xxpbooster::%player%} > 1:
+               add 50 to {combatxp::%attacker%}
+          else:
+               add 10 to {combatxp::%attacker%}
+on damage:
+	if display name of victim is "&5Enchanted Guard":
+		damage attacker by 1
+		push attacker backwards at speed 0.3
+on damage:
+	if victim is a player:
+		if attacker is a player:
+			cancel event
+on right click:
+	if player's tool is emerald named "&a2x xp Booster 5m":
+		if {5mxpbooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5mxpbooster::%player%} to 300
+		else:
+			if {5mxpbooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+command /xpclear:
+	permission: op
+	trigger:
+		set {5mxpbooster::%player%} to 0
+		send "&bYoo stuffs been reset" to player
+every 1 second:
+	loop all players:
+		if {5mxpbooster::%loop-player%} > 0:
+			subtract 1 from {5mxpbooster::%loop-player%}
+		if {5mdamagebooster::%loop-player%} > 0:
+			subtract 1 from {5mdamagebooster::%loop-player%}
+		if {5mcoinbooster::%loop-player%} > 0:
+			subtract 1 from {5mcoinbooster::%loop-player%}
+		if {5m5xcoinbooster::%loop-player%} > 0:
+			subtract 1 from {5m5xcoinbooster::%loop-player%}
+		if {5m5xxpbooster::%loop-player%} > 0:
+			subtract 1 from {5m5xcoinbooster::%loop-player%}
+		if {5m5xdamagebooster::%loop-player%} > 0:
+			subtract 1 from {5m5xcoinbooster::%loop-player%}
+command /xpbooster:
+	trigger:
+		send "&bYou have %{5mxpbooster::%player%}% seconds until your booster runs out"
+on right click:
+	if player's tool is diamond named "&b2x Damage 5m":
+		if {5mdamagebooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5mdamagebooster::%player%} to 300
+		else:
+			if {5mdamagebooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+command /damageclear:
+	trigger:
+		set {5mdamagebooster::%player%} to 0
+command /damagebooster:
+	trigger:	
+		send "&b you have %{5mdamagebooster::%player%}% seconds left of double damage" to player
+on right click:
+	if player's tool is gold ingot named "&e2x Coin Booster 5m":
+		if {5mcoinbooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5mcoinbooster::%player%} to 300
+		else:
+			if {5mcoinbooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+command /coinbooster:
+	trigger:
+		send "&eYou have %{5mcoinbooster::%player%}% seconds until your booster runs out"
+command /clearcoins:
+	trigger:
+		set {5mcoinbooster::%player%} to 0
+on right click:
+	if player's tool is gold ingot named "&e2x Coin Booster 15m":
+		if {5m2xcoinbooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5m5xcoinbooster::%player%} to 900
+		else:
+			send "you already have a booster active" to player
+on right click:
+	if player's tool is diamond named "&b2x Damage 15m":
+		if {5m5xdamagebooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5mdamagebooster::%player%} to 900
+		else:
+			if {5mdamagebooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+on right click:
+	if player's tool is emerald named "&a2x xp Booster 15m":
+		if {5mxpbooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5mxpbooster::%player%} to 900
+		else:
+			if {5mxpbooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+on right click:
+	if player's tool is gold ingot named "&e5x Coin Booster 5m":
+		if {5m5xcoinbooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5m5xcoinbooster::%player%} to 300
+		else:
+			if {5m5xcoinbooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+on right click:
+	if player's tool is diamond named "&b5x Damage 5m":
+		if {5m5xdamagebooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5m5xdamagebooster::%player%} to 300
+		else:
+			if {5m5xdamagebooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+on right click:
+	if player's tool is emerald named "&a5x xp Booster 5m":
+		if {5m5xxpbooster::%player%} = 0:
+			remove 1 of tool from player
+			execute console command "execute at %player% run playsound minecraft:entity.player.levelup player %player%"
+			set {5m5xxpbooster::%player%} to 300
+		else:
+			if {5m5xxpbooster::%player%} > 1:
+				send "&4you already have an active xp booster" to player
+command /clear5xxp:
+	trigger:
+		set {5m5xxpbooster::%player%} to 0
+command /clear5xcoin:
+	trigger:
+		set {5m5xcoinbooster::%player%} to 0
+on first join:
+	set {5m5xcoinbooster::%player%} to 0
+	set {5m5xcoinbooster::%player%} to 0
+	set {5m5xdamagebooster::%player%} to 0
+	set {5m2xcoinbooster::%player%} to 0
+	set {5m5xdamagebooster::%player%} to 0
+	set {5mxpbooster::%player%} to 0
+command /test4:
+	trigger:
+		give diamond named "chicken" with lore "hello" and "yo" to player
+		
+		
+on block break:
+        cancel drops
+        if event-block is sand:
+                set {_newBlock} to location at event-block
+                set event-block to sandstone
+                chance of {treasurechance::%player%}%:
+                        set event-block to chest
+                        wait 6 seconds
+                        set event-block to sand
+                else:
+                        wait 3 seconds
+                        set event-block to a sand
+                        stop
+                chance of 2.5%:
+                        set event-block to chest   
+                else:
+                        stop
+
+on click on chest:
+    if "%region at player%" contains "desert":
+        wait 1 ticks
+        chance of 100%:
+            add 1000 to player's balance 
+            give 1 gunpowder named "&7Gun powder" to player
+            send "&7&lYou found a common Chest got &f&l1000 Coins and 1 Gun powder"
+            set event-block to sand
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            stop
+        chance of 25%:
+            add 2500 to player's balance
+            give 3 gunpowder named "&7Gun powder" to player
+            send "&aYou found and &a&lUNCOMMON &aChest you found &e&l2500 coins &aand 3 &7Gunpowder" to player
+            set event-block to sand
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            stop
+        chance of 10%:
+            add 5000 to player's balance
+            give 5 gunpowder named "&7Gun powder" to player
+            give 3 iron nugget named "&f&lScrap parts" to player
+            send "&5You found and &5&lEPIC &5chest you got &e5000 Coins &75 Gun pownder &f&l3 Scrap Parts" to player
+            set event-block to sand
+            execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+        else:
+            stop
+        chance of 2.5%:
+            add 10000 to player's balance
+            give 16 gunpowder named "&7Gun powder" to player
+            give 5 iron nugget named "&f&lScrap parts" to player
+            give 2 yellow dye named "&4&kl&6&lGold Scrap&4&kl" to player
+            send "&eyou found a &6&lLEGENDARY CHEST&e you got &e&l10k coins &716 Gunpowder and &f&l5 Scrap nuggets" and "&4&kl&6&lGold Scrap&4&kl" to player
+        else:
+            stop
+		
+on block break:
+    if event-block is sand:
+        add 1 to {treasurexp::%player%}
+        if {treasurelevel::%player%} = 0:
+            send title "&b(%{treasurexp::%player%}%/25)" with subtitle "&3Combat Xp" to player for 0.5 seconds
+            stop
+        if {treasurelevel::%player%} < 40:
+            send title "&b(%{treasurexp::%player%}%/%{treasurexplevel::%player%}%)" with subtitle "&3Treasure Xp" to player for 0.5 seconds
+every 1 tick:	
+    loop all players:
+        if {treasurexp::%loop-player%} > 24:
+            if {treasurelevel::%loop-player%} = 0:
+                send title "&c&lTreasure level up ↑ 1" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 1" to loop-player
+                send "&6you now have a  3 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 1
+                set {treasurelevel::%loop-player%} to 1
+                set {treasurexplevel::%loop-player%} to 100
+                set {treasurechance::%loop-player%} to 3
+        if {treasurexp::%loop-player%} > 99:
+            if {treasurelevel::%loop-player%} = 1:
+                send title "&c&ltreasure level up ↑ 2" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 2" to loop-player
+                send "&6you hnow have a 6 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 2
+                set {treasurelevel::%loop-player%} to 2
+                set {treasurexplevel::%loop-player%} to 250
+                set {treasurechance::%loop-player%} to 6
+        if {treasurexp::%loop-player%} > 249:
+            if {treasurelevel::%loop-player%} = 2:
+                send title "&c&ltreasure level up ↑ 3" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 3" to loop-player
+                send "&6you now have a 9 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 3
+                set {treasurelevel::%loop-player%} to 3
+                set {treasurexplevel::%loop-player%} to 500
+                set {treasurechance::%loop-player%} to 9
+        if {treasurexp::%loop-player%} > 499:
+            if {treasurelevel::%loop-player%} = 3:
+                send title "&c&ltreasure level up ↑ 4" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 4" to loop-player
+                send "&6you now have a 12 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 4
+                set {treasurexplevel::%loop-player%} to 1000
+                set {treasurechance::%loop-player%} to 12
+        if {treasurexp::%loop-player%} > 999:
+            if {treasurelevel::%loop-player%} = 4:
+                send title "&c&ltreasure level up ↑ 5" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 5" to loop-player
+                send "&6you now have a 15 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 5
+                set {treasurexplevel::%loop-player%} to 2500
+                set {treasurechance::%loop-player%} to 15
+        if {treasurexp::%loop-player%} > 2499:
+            if {treasurelevel::%loop-player%} = 5:
+                send title "&c&ltreasure level up ↑ 6" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 6" to loop-player
+                send "&6you now have a 18 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 6
+                set {treasurexplevel::%loop-player%} to 5000
+                set {treasurechance::%loop-player%} to 18
+        if {treasurexp::%loop-player%} > 4999:
+            if {treasurelevel::%loop-player%} = 6:
+                send title "&c&ltreasure level up ↑ 7" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 7" to loop-player
+                send "&6you now have a 21 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 7
+                set {treasurexplevel::%loop-player%} to 7500
+                set {treasurechance::%loop-player%} to 21
+        if {treasurexp::%loop-player%} > 7499:
+            if {treasurelevel::%loop-player%} = 7:
+                send title "&c&ltreasure level up ↑ 8" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 8" to loop-player
+                send "&6you now have a 22.5 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 8
+                set {treasurexplevel::%loop-player%} to 8000
+                set {treasurechance::%loop-player%} to 22.5
+        if {treasurexp::%loop-player%} > 7999:
+            if {treasurelevel::%loop-player%} = 8:
+                send title "&c&ltreasure level up ↑ 9" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 9" to loop-player
+                send "&6you now have a 25 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 9
+                set {treasurexplevel::%loop-player%} to 8500
+                set {treasurechance::%loop-player%} to 25
+        if {treasurexp::%loop-player%} > 8499:
+            if {treasurelevel::%loop-player%} = 9:
+                send title "&c&ltreasure level up ↑ 10" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 10" to loop-player
+                send "&6you now have 27.5 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 10
+                set {treasurexplevel::%loop-player%} to 9500
+                set {treasurechance::%loop-player%} to 27.5
+        if {treasurexp::%loop-player%} > 9499:
+            if {treasurelevel::%loop-player%} = 10:
+                send title "&c&ltreasure level up ↑ 11" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 11" to loop-player
+                send "&6you now have 30 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 11
+                set {treasurexplevel::%loop-player%} to 10000
+                set {treasurechance::%loop-player%} to 30
+        if {treasurexp::%loop-player%} > 9999:
+            if {treasurelevel::%loop-player%} = 11:
+                send title "&c&ltreasure level up ↑ 12" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 12" to loop-player
+                send "&6you now have 31.5 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 12
+                set {treasurexplevel::%loop-player%} to 10500
+                set {treasurechance::%loop-player%} to 31.5
+        if {treasurexp::%loop-player%} > 10499:
+            if {treasurelevel::%loop-player%} = 12:
+                send title "&c&ltreasure level up ↑ 13" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 13" to loop-player
+                send "&6you now have 33 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 13
+                set {treasurexplevel::%loop-player%} to 11000
+                set {treasurechance::%loop-player%} to 33
+        if {treasurexp::%loop-player%} > 10999:
+            if {treasurelevel::%loop-player%} = 13:
+                send title "&c&ltreasure level up ↑ 14" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 14" to loop-player
+                send "&6you now have 34.5 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 14
+                set {treasurexplevel::%loop-player%} to 12000
+                set {treasurechance::%loop-player%} to 34.5
+        if {treasurexp::%loop-player%} > 11999:
+            if {treasurelevel::%loop-player%} = 14:
+                send title "&c&ltreasure level up ↑ 15" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 15" to loop-player
+                send "&6you now have 36 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 15
+                set {treasurexplevel::%loop-player%} to 12500
+                set {treasurechance::%loop-player%} to 36
+        if {treasurexp::%loop-player%} > 12499:
+            if {treasurelevel::%loop-player%} = 15:
+                send title "&c&ltreasure level up ↑ 16" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 16" to loop-player
+                send "&6you now have 37.5 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 16
+                set {treasurexplevel::%loop-player%} to 13000
+                set {treasurechance::%loop-player%} to 37.5
+        if {treasurexp::%loop-player%} > 12999:
+            if {treasurelevel::%loop-player%} = 16:
+                send title "&c&ltreasure level up ↑ 17" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 17" to loop-player
+                send "&6you now have 41 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 17
+                set {treasurexplevel::%loop-player%} to 13500
+        if {treasurexp::%loop-player%} > 13499:
+            if {treasurelevel::%loop-player%} = 10:
+                send title "&c&ltreasure level up ↑ 18" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 18" to loop-player
+                send "&6you now have 42 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 18
+                set {treasurexplevel::%loop-player%} to 14000
+        if {treasurexp::%loop-player%} > 13999:
+            if {treasurelevel::%loop-player%} = 18:
+                send title "&c&ltreasure level up ↑ 19" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 19" to loop-player
+                send "&6you now have 43 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 19
+                set {treasurexplevel::%loop-player%} to 14500
+        if {treasurexp::%loop-player%} > 14999:
+            if {treasurelevel::%loop-player%} = 10:
+                send title "&c&ltreasure level up ↑ 20" to loop-player
+                send "&e---------------------------------------------" to loop-player
+                send "&bYou have leveled up your treasure xp to level 20" to loop-player
+                send "&6you now have 45 percent chance to get a chest" to loop-player
+                send "&e-------------------------------------------" to loop-player
+                execute console command "execute at %loop-player% run playsound minecraft:entity.player.levelup player %loop-player%"
+                set {treasurexp::%loop-player%} to 0
+                set {treasurelevel::%loop-player%} to 20
+                set {treasurexplevel::%loop-player%} to 15000
+command /treasuregui:
+	permission: op
+	trigger:
+		open virtual chest with 1 row named "&6&lTreausre Gui" to player
+		set slot 0 of player's current inventory to diamond shovel named "&bTreasure &b&llevel" with lore "&fYour level is &b&l%{treasurelevel::%player%}%"
+		set slot 1 of player's current inventory to gold nugget named "&eset chance of treasure" with lore "&fCurrent chance &6&l%{treasurechance::%player%}%"
+		set slot 2 of player's current inventory to white stained glass pane named " " 
+		set slot 3 of player's current inventory to white stained glass pane named " " 
+		set slot 4 of player's current inventory to white stained glass pane named " " 
+		set slot 5 of player's current inventory to white stained glass pane named " " 
+		set slot 6 of player's current inventory to white stained glass pane named " " 
+		set slot 7 of player's current inventory to white stained glass pane named " " 
+		set slot 8 of player's current inventory to white stained glass pane named " " 
+		
+on inventory click:
+    inventory name of player's current inventory is "&6&lTreausre Gui":
+        name of item is " "
+        cancel event
+on inventory click:
+    inventory name of player's current inventory is "&6&lTreausre Gui":
+        if name of item is "&eset chance of treasure":
+            cancel event
+            set {chestchance::%player%} to 1
+            open virtual chest with 1 row named "&eChance" to player
+            set slot 0 of player's current inventory to gold nugget named "&echance of treasure" with lore "&f there is a &e%{treasurechance::%player%}% percent chance" 
+            set slot 1 of player's current inventory to lime concrete named "&a+ 5 percent chance"
+            set slot 2 of player's current inventory to red concrete named "&4-5 percent chance" 
+            set slot 3 of player's current inventory to white stained glass pane named " " 
+            set slot 4 of player's current inventory to white stained glass pane named " " 
+            set slot 5 of player's current inventory to white stained glass pane named " " 
+            set slot 6 of player's current inventory to white stained glass pane named " " 
+            set slot 7 of player's current inventory to white stained glass pane named " " 
+            set slot 8 of player's current inventory to white stained glass pane named " " 
+			
+on inventory click:
+    inventory name of player's current inventory is "&eChance":
+        name of item is " "
+        cancel event
+on inventory click:
+    inventory name of player's current inventory is "&eChance":
+        name of item is "&a+ 5 percent chance"
+        cancel event
+        add 5 to {treasurechance::%player%}
+        send "&9there is now a &e%{treasurechance::%player%}% percent chance &9 to spawn a chest" to player
+on inventory click:
+    inventory name of player's current inventory is "&eChance":
+        name of item is "&4-5 percent chance"
+        cancel event
+        if {treasurechance::%player%} > 0:
+            subtract 5 from {treasurechance::%player%}
+            send "&9there is now a &e%{treasurechance::%player%}% percent chance &9 to spawn a chest" to player
+        else:
+            send "&4the chance cant be lower than 0" to player
+on inventory click:
+    inventory name of player's current inventory is "&eChance":
+        name of item is "&eChance of treasure"
+        cancel event
+command /desert:
+	trigger:
+		open virtual chest with 2 rows named "&eDesert shop" to player
+		set slot 0 of player's current inventory to gold nugget named  "&6&lCurrent Balance" with lore "&e&l%player's balance%"
+		set slot 1 of player's current inventory to gunpowder named "&5&lEnchanted Gunpowder" with lore "&eCost" and "" and "&f- &7&l64 Gunpowder" 
+		set slot 2 of player's current inventory to white stained glass pane named " "
+		set slot 3 of player's current inventory to white stained glass pane named " "
+		set slot 4 of player's current inventory to copper ingot named "&6Explosive Scrap" with lore "&eCost" and "&f- 10 &f&lScrap parts" 
+		set slot 5 of player's current inventory to white stained glass pane named " "
+		set slot 6 of player's current inventory to white stained glass pane named " "
+		set slot 7 of player's current inventory to iron sword named "&f&lUnstable &7Explosive Sword" with lore "&eCost" and "" and "&f32 &5Enchanted Gunpowder" and "&f16 &6Explosive scraps" and "&e100,000 coins"
+		set slot 8 of player's current inventory to white stained glass pane named " "
+		set slot 9 of player's current inventory to white stained glass pane named " "
+		set slot 10 of player's current inventory to white stained glass pane named " "
+		set slot 11 of player's current inventory to gold sword named "&6&lGilded &7Explosive Sword" with lore "&ecost" and "&f" and "&f1 &fUnstable &7Explosive Sword" and "&f32 &6Explosive Scraps" 
+		set slot 12 of player's current inventory to white stained glass pane named " "
+		set slot 13 of player's current inventory to white stained glass pane named " "
+		set slot 14 of player's current inventory to white stained glass pane named " "
+		set slot 15 of player's current inventory to white stained glass pane named " "
+		set slot 16 of player's current inventory to white stained glass pane named " "
+		set slot 17 of player's current inventory to white stained glass pane named " "
+on inventory click:
+	inventory name of player's current inventory is "&eDesert shop":
+		name of item is "&6&lGilded &7Explosive Sword"
+		cancel event
+		loop all items in player's inventory:
+			if name of loop-item is "&6Explosive Scrap":
+				if player has 32 of loop-item named "&6Explosive Scrap":
+					remove 32 of loop-item named "&6Explosive Scrap" from player
+					if name of loop-item is "&f&lUnstable &7Explosive Sword":
+						if player has 1 of loop-item named "&f&lUnstable &7Explosive Sword":
+on inventory click:
+	inventory name of player's current inventory is "&eDesert shop":
+		name of item is "&6&lGilded &7Explosive Sword"
+		cancel event
+		loop all items in player's inventory:
+			if name of loop-item is "&f&lUnstable &7Explosive Sword":
+				if player has 1 of loop-item named "&f&lUnstable &7Explosive Sword":
+					remove 1 of loop-item named "&f&lUnstable &7Explosive Sword" from player
+					give gold sword named "&6&lGilded &7Explosive Sword" with lore "&7Damage &e1000"  and "&f&lCreates an explosion dealing 500 damage" and "" and "&6&lLEGENDARY" to player
+					stop
+on inventory click:
+    inventory name of player's current inventory is "&eDesert shop":
+        name of item is "&6&lCurrent Balance"
+        cancel event		
+on inventory click:
+    inventory name of player's current inventory is "&eDeset shop":
+        name of item is " "
+        cancel event
+on inventory click:
+    inventory name of player's current inventory is "&eDesert shop":
+        name of item is "&5&lEnchanted Gunpowder"
+        cancel event
+        loop all items in player's inventory:
+            if name of loop-item is "&7Gun powder":
+                if player has 64 of loop-item named "&7Gun powder":
+                    remove 64 of loop-item named "&7Gun powder" from player
+                    give gunpowder of mending named "&5Enchanted Gunpowder" with lore "" and "&a&lUNCOMMON" to player
+                    execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+on inventory click:
+	inventory name of player's current inventory is "&eDesert shop":
+		name of item is "&f&lUnstable &7Explosive Sword"
+		cancel event
+		loop all items in player's inventory:
+			if player has 32 of loop-item named "&5Enchanted Gunpowder":
+				remove 32 of loop-item named "&5Enchanted Gunpowder" from player
+			if player has 16 of loop-item named "&6Explosive Scrap":
+				remove 16 of loop-item named "&6Explosive Scrap" from player
+				remove 32 of loop-item named "&5Enchanted Gunpowder" from player
+				give iron sword named "&f&lUnstable &7Explosive Sword" with lore "&7Damage &e500"  and "&f&lCreates an explosion dealing 250 damage" and "" and "&5&lEPIC" to player
+on inventory click:
+    inventory name of player's current inventory is "&eDesert shop":
+        name of item is "&6Explosive Scrap"
+        cancel event
+        loop all items in player's inventory:
+            if name of loop-item is "&7Gun powder":
+                if player has 16 of loop-item named "&7Gun powder":
+                    remove 0 of loop-item named "&7Gun powder" from player
+                else:
+                    send "&4you aint got nothing for this item" to player
+            if name of loop-item is "&f&lScrap parts":
+                if player has 10 of loop-item named "&f&lScrap parts":
+                    remove 10 of loop-item named "&f&lScrap parts" from player
+                    remove 16 of loop-item named "&7Gun powder" from player
+                    execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+                    give 1 copper ingot named "&6Explosive Scrap" with lore "&fused for explosive weapons" and "" and "&a&lUNCOMMON" to player
+                else:
+                    send "&4you are not rich enough to afford this open some more chests" to player
+command /addmorecoins <number>:
+	permission: op
+	trigger:
+		if arg-1 is a number:
+			add arg-1 to player's balance
+			send "&b&l%arg-1% &9coins have been added to your balance" to player
+command /resetcoins <player>:
+	permission: op
+	trigger:
+		if arg-1 is a player:
+			set arg-1's balance to 0
+			send "&9Your balance has been reset by an admin" to arg-1
+command /newsummon:
+	permission: op
+	trigger:
+		spawn 10 of axolotl at location of player
+		wait 5 second
+command /setlevel <number>:
+	permission: op
+	trigger:
+		if arg-1 is a number:
+			set {combatlevel::%player%} to arg-1 
+			send "&b&l%arg-1% &9is now your level" to player
+			
+on entering of region "skull":
+	execute player command "warper"
+
+
+command /hyperion:
+    description: Give the player Hyperion!
+    trigger:
+        set {_lore::*} to " " and "&6&LLEGENDARY DUNGEON SWORD"
+        give player 1 iron sword named "&f&lUnstable &7Explosive Sword" with lore {_lore::*}
+        send "&7You have acquired &f&lUnstable &7Explosive Sword&7!"
+ 
+on join:
+  set {hyperion::%player%} to 0
+ 
+on right click:
+    if player's held item is iron sword named "&f&lUnstable &7Explosive Sword":
+        if {hyperion::%player%} is 0:
+            loop all entities in radius 5 around the player:
+                if loop-entity is not a player:
+                    force player to damage loop-entity by 500
+                    create fake explosion at loop-entity
+                    wait 2 seconds
+                    set {hyperion::%player%} to 0
+        else:
+            send "&7This is on cooldown!"
+on right click:
+    if player's held item is gold sword named "&6&lGilded &7Explosive Sword":
+        if {hyperion::%player%} is 0:
+            loop all entities in radius 7.5 around the player:
+                if loop-entity is not a player:
+                    force player to damage loop-entity by 1000
+                    force player to damage loop-entity by 1000
+                    force player to damage loop-entity by 1000
+                    force player to damage loop-entity by 1000
+                    force player to damage loop-entity by 1000
+                    force player to damage loop-entity by 1000
+                    force player to damage loop-entity by 1000
+                    create fake explosion at loop-entity
+                    wait 1 seconds
+                    set {hyperion::%player%} to 0
+        else:
+            send "&7This is on cooldown!"
+command /magmaboss:
+	permission: op
+	trigger:
+		spawn 1 of magma cube at location of player
+		add "{Size:12}" to nbt of last spawned magma cube
+		set name of last spawned magma cube to "&4&lMagma Boss"
+		set {pleasework} to 8
+		set max health of last spawned magma cube to {magmahealth}
+		set health of last spawned magma cube to {magmahealth}
+on death of magma cube:
+	if name of victim is "&4&lMagma Boss":
+		set {pleasework} to 7
+		wait 1 seconds
+		set {pleasework} to 8
+		wait 4 seconds
+		spawn 1 of magma cube at location of victim
+		add "{Size:12}" to nbt of last spawned magma cube
+		set name of last spawned magma cube to "&4&lMagma Boss"
+		set max health of last spawned magma cube to {magmahealth}
+		set health of last spawned magma cube to {magmahealth}
+		give netherite axe named "yo" to last spawned magma cube
+on death of magma cube:
+	if name of victim is "&4&lMagma Boss":
+		chance of 25%:
+			drop 1 of red dye of mending 1 named "change this in skript file"  at location of victim
+			stop
+on death of magma cube:
+	if name of victim is "&4&lMagma Boss":
+		execute console command "execute at %attacker% run playsound minecraft:ui.toast.challenge_complete player %attacker%"
+		subtract 1 from {pleasework}
+		if {pleasework} < 8:
+			execute console command "execute run kill @e[type=magma_cube]" 
+			cancel drops
+every 1 tick:
+	if {pleasework} < 8:
+		execute console command "execute run teleport @e[type=minecraft:magma_cube] 0 0 0"
+		execute console command "execute run kill @e[type=magma_cube]" 
+
+on damage:
+	if name of victim is  "&4&lMagma Boss":
+		chance of 10%:
+			create a fake explosion at location of attacker
+			create a fake explosion at location of victim
+			push attacker backwards at speed 1.5
+			send "&4you have been pushed back" to attacker
+			force victim to damage attacker by 10
+			execute console command "execute at %attacker% run playsound minecraft:entity.ghast.warn player %attacker%"
+			execute console command "particle minecraft:explosion_emitter %attacker%"
+			execute console command "particle minecraft:explosion_emitter %victim%"
+		chance of 5%:
+			send "&4&kkwdapokw" to attacker
+			bind hologram "&4&kwadwpoka" to attacker for 4 second offset by 0.4, 0.7, 0.7
+			bind hologram "&4&kwadwpoka" to victim for 4 second offset by 0.4, 0.7, 0.7
+			bind hologram "&4&kwadwpoka" to victim for 4 second offset by 3.1, 6.9, 1.3
+			send "&cThe magma is now Enraged!" to attacker
+			apply blindness 3 to attacker for 5 seconds
+			apply slowness 2 to attacker for 3 seconds
+			execute console command "smite %attacker%"
+			damage victim by 25
+			send title "&4You are all going to die here" to attacker
+			push attacker upwards at speed 1.5
+		chance of 15%:
+			bind hologram "&4these attacks weaken you" to attacker for 1 second offset by 0.4, 0.7, 0.7
+			loop all players in radius 7.5 around the victim:
+				push loop-player backwards at speed 2.5
+				execute console command "run playsound minecraft:entity.illusioner.mirror_move player %loop-player%"
+				damage loop-player by 10
+				apply weakness 2 to loop-player for 5 seconds
+		chance of 15%:
+			send title "&ci call on my minions" to attacker
+			spawn {vexspawn} of vex at location of attacker
+			set name of last spawned magma cube to "&4Magma minions"
+			give netherite axe of sharpness 5 to last spawned vex
+			set max health of last spawned vex to 25
+			set health of last spawned vex to 25
+			push attacker forwards at speed 2
+every 20 seconds:
+	execute console command "execute run kill @e[type=vex]"
+command /magmasettings:
+	permission:magma.settings.master
+	trigger:
+		open virtual chest with 3 rows named "&4Magma Settings" to player
+		set slot 0 of player's current inventory to magma block named "&4health of boss" with lore "&ccurrent health is &4&l%{magmahealth}%"
+		set slot 1 of player's current inventory to lime concrete named "&a+ 10 health to magma boss"
+		set slot 2 of player's current inventory to red concrete named "&4- 10 health to magma boss"
+		set slot 9 of player's current inventory to netherite axe named "&4Magma's damage" with lore "&cthe current damage is: &4&l%{magmasharp}%"
+		set slot 10 of player's current inventory to lime concrete named "&a+ 1  magma damage"
+		set slot 11 of player's current inventory to red concrete named "&4- 1 magma damage"
+		set slot 18 of player's current inventory to vex spawn egg named "&4Amount of Vex that spawn during the attack &c&l%{vexspawn}%"
+		set slot 19 of player's current inventory to lime concrete named "&a+ 1  magma vex spawns now"
+		set slot 20 of player's current inventory to red concrete named "&4- 1  vex spawns during the attack"
+on damage:
+	if name of attacker is "&4&lMagma Boss":
+		damage victim by {magmasharp}
+		
+		
+		
+
+on inventory click:
+	inventory name of player's current inventory is "&4Magma Settings":
+		name of item is "&4- 1  vex spawns during the attack"
+		cancel event
+		subtract 1 from {vexspawn}
+		send "&4Box heat: &cvex spawn is now %{vexspawn}%" to player
+on inventory click:
+	inventory name of player's current inventory is "&4Magma Settings":
+		name of item is "&a+ 1  magma vex spawns now"
+		cancel event
+		add 1 to {vexspawn}
+		send "&4Box heat: &cvex spawn is now %{vexspawn}%" to player
+on inventory click:
+	inventory name of player's current inventory is "&4Magma Settings":
+		name of item is "&a+ 10 health to magma boss"
+		cancel event
+		add 10 to {magmahealth}
+		send "&4Box heat: &cMagma Health is now %{magmahealth}%" to player
+on inventory click:
+	inventory name of player's current inventory is "&4Magma Settings":
+		name of item is "&4- 10 health to magma boss"
+		cancel event		
+		subtract 10 from {magmahealth}
+		send "&4Box heat: &cMagma Health is now %{magmahealth}%" to player
+on inventory click:
+	inventory name of player's current inventory is "&4Magma Settings":
+		name of item is "&a+ 1  magma damage"
+		cancel event
+		add 1 to {magmasharp}
+		send "&4Box heat: &c magma damage is now %{magmasharp}%" to player
+on inventory click:
+	inventory name of player's current inventory is "&4Magma Settings":
+		name of item is "&4- 1 magma damage"
+		cancel event
+		subtract 1 from {magmasharp}
+		send "&4Box heat: &cmagma damage  is now %{magmasharp}%" to player
+command /jonsey:
+    description: Give the player Hyperion!
+    trigger:
+        set {_lore::*} to " " and "&6&LLEGENDARY DUNGEON SWORD"
+        give player 1 iron sword named "coolboy" with lore {_lore::*}
+        send "&7You have acquired coolboy"
+ 
+on join:
+  set {hyperion::%player%} to 0
+ 
+on right click:
+    if player's held item is iron sword named "coolboy":
+        if {hyperion::%player%} is 0:
+            push player forward at speed 1.5
+            push player upward at speed 0.5
+            set {hyperion::%player%} to 1
+            wait 1 seconds
+            set {hyperion::%player%} to 0
+            loop all entities in radius 5 around the player:
+                if loop-entity is not a player:
+                    force player to damage loop-entity by 500
+        else:  
+            send "&7This is on cooldown!"	
+			
+
+command /sandshop:
+	trigger:
+		open virtual chest with 1 row named "&eShovel Shop" to player
+		set slot 0 of player's current inventory to stone shovel named "&7Starter Shovel" with lore "&ecost" and "" and "&e$10000"
+		set slot 2 of player's current inventory to iron shovel named "&fNormal Shovel" with lore "&ecost" and "" and "&e$25000" and "&732 Gunpowder"
+		set slot 4 of player's current inventory to golden shovel named "&5Epic Shovel" with lore "&ecost" and "" and "&e$50000" and "&764 Gunpowder"
+		set slot 6 of player's current inventory to diamond shovel named "&6Legendary Shovel" with lore "&ecost" and "" and "&e75000" and "&7128 Gunpowder" and "&65 Gold scraps"
+		set slot 8 of player's current inventory to barrier named "&4Must have all items otherwise it will take them"
+		
+		
+		
+on inventory click:
+	inventory name of player's current inventory is "&eShovel Shop":
+		name of item is "&7Starter Shovel"
+		cancel event
+		if player's balance > 9999:
+			remove 10000 from player's balance
+			give 1 stone shovel of efficiency 1 named "&7Starter Shovel" with lore "&7Damage &e100" and "" and "&7&lCOMMON" to player
+			execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+on inventory click:
+	inventory name of player's current inventory is "&eShovel Shop":
+		name of item is "&fNormal Shovel"
+		cancel event
+		if player's balance > 24999:
+			remove 25000 from player's balance 
+			loop all items in player's inventory:
+				if name of loop-item is "&7Gun powder":
+					if player has 64 of loop-item named "&7Gun powder":
+						remove 64 of loop-item named "&7Gun powder" from player
+						give 1 iron shovel of efficiency 3  named "&fNormal Shovel" with lore "&7damage &e200" and "" and "&a&lUNCOMMON" to player
+						execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+					else:
+						send "&4You need 16 gunpowder and 25,000 coins to buy this" to player
+on inventory click:
+	inventory name of player's current inventory is "&eShovel Shop":
+		name of item is "&5Epic Shovel"
+		cancel event
+		if player's balance > 49999:
+			remove 50000 from player's balance
+			loop all items in player's inventory:
+				if player has 64 of loop-item named "&5Enchanted Gunpowder":
+					remove 64 of loop-item named "&7Gun powder" from player
+					give 1 gold shovel of efficiency 5 named "&5Epic Shovel" with lore "&7Damage &e300" and "" and "&5&lEPIC" to player
+					execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"	
+on inventory click:
+	inventory name of player's current inventory is "&eShovel Shop":
+		name of item is "&6Legendary Shovel"
+		cancel event
+		if player's balance > 74999:
+			remove 75000 from player's balance
+			loop all items in player's inventory:
+				if player has 128 of loop-item named "&5Enchanted Gunpowder":
+					remove 128 of loop-item named "&5Enchanted Gunpowder" from player
+				if player has 5 of loop-item named "&4&kl&6&lGold Scrap&4&kl":
+					remove 5 of loop-item named "&4&kl&6&lGold Scrap&4&kl" from player
+					give 1 diamond shovel of efficiency 7 named "&6Legendary Shovel" with lore "&7Damage &e500" and "" and "&6&lLEGENDARY" to player
+					execute console command "execute at %player% run playsound minecraft:entity.experience_orb.pickup player %player%"
+on entering of region "sandstone":
+	execute player command "warper"
+on right click on gold block:
+	if player's balance > 99999:
+		subtract 100000 from player's balance
+		send "&b&lYou have aquired the desert" to player
+		send "&b&lDo /warper or /spawn" to player
+		add 1 to {sandstoneaccess::%player%}
+on death of stray:
+	if name of victim is "&7&lUndead Skeleton":
+		wait 1 second
+		spawn 1 of stray at location of victim
+		set last spawned stray's max health to 200000
+		set last spawned stray's health to 200000
+		add "{NoAI:1}" to nbt of last spawned stray
+		set name of last spawned stray to "&7&lUndead Skeleton"
+		
+
+on death of stray:
+    if display name of victim is "&7&lUndead Skeleton":
+        loop blocks in radius 2 around head of victim:
+            add location of loop-block to {_blocks::*}
+        set {_bl} to random element of {_blocks::*}
+        createHolo({_bl}, "&6+ &e50 coins", 25 ticks)
+on death of stray:
+    if display name of victim is "&7&lUndead Skeleton":
+        if {5mxpbooster::%attacker%} = 0:
+            if {5m5xxpbooster::%player%} = 0:
+                add 30 to {combatxp::%attacker%}
+            else:
+                stop
+on death of stray:
+    if display name of victim is "&7&lUndead Skeleton":
+        if {5mxpbooster::%attacker%} > 0:
+            add 60 to {combatxp::%attacker%}
+        else:
+            stop
+on death of stray:
+    if display name of victim is "&7&lUndead Skeleton":
+        if {5m5xxpbooster::%attacker%} > 10:
+            add 150 to {combatxp::%attacker%}
+on death of stray:		
+	if display name of victim is "&7&lUndead Skeleton":
+		if {5mcoinbooster::%attacker%} > 1:
+			add 100 to player's balance
+		else:
+			add 50 to player's balance
+		if {5m5xcoinbooster::%player%} > 1:
+			add 500 to player's balance
+		else:
+			add 50 to player's balance
